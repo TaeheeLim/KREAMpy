@@ -31,3 +31,5 @@ print(f"page title: {page_title}")
 # 현재 URL 출력
 current_url = browser.current_url
 print(f"current URL: {current_url}")
+
+print("helloworld")
