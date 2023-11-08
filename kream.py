@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pyperclip
+import time
 from selenium.webdriver.common.keys import Keys
 
 # Setup opitons
@@ -26,11 +27,11 @@ except Exception as e:
     print(e)
 
 # Move to URL
+print('======================================================')
 browser.get('https://kream.co.kr/login')
 
 # 페이지 제목 출력
 page_title = browser.title
-print(f"page title: {page_title}")
 
 # 현재 URL 출력
 current_url = browser.current_url
@@ -53,26 +54,35 @@ popup_window_handle = None
 
 # 모든 윈도우 핸들을 검사하여 새 창으로 전환
 for handle in browser.window_handles:
-    print(handle)
     if handle != main_window_handle:
         popup_window_handle = handle
         break
 
 # 새 창으로 컨텍스트 전환
 browser.switch_to.window(popup_window_handle)
-print(browser.title)
+print(f"팝업 브라우저 URL : {browser.current_url}")
+
+pyperclip.copy(userId)
 
 WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.ID, 'id')))
 naverLogInId = browser.find_element(By.ID, 'id')
-naverLogInId.send_keys(userId)
+naverLogInId.click()
+naverLogInId.send_keys(Keys.CONTROL, 'v')
+time.sleep(1)
 
+pyperclip.copy(userPassword)
 WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.ID, 'pw')))
 naverLogInPw = browser.find_element(By.ID, 'pw')
-naverLogInPw.send_keys(userPassword)
+naverLogInPw.click()
+naverLogInPw.send_keys(Keys.CONTROL, 'v')
+time.sleep(1)
 
 WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.ID, 'log.login')))
 loginBtnWithNaver = browser.find_element(By.ID, 'log.login')
 loginBtnWithNaver.click()
+
+print(browser.title)
+print(browser.current_url)
 
 # 작업 완료 후 원래의 메인 윈도우로 다시 전환(필요한 경우)
 #browser.switch_to.window(main_window_handle)
